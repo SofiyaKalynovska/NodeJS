@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { read } from './fs.service';
+import { read, write } from './fs.service';
 dotenv.config();
 const app = express();
 
