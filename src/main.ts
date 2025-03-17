@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
-import { read, write } from './fs.service';
+import { read } from './fs.service';
 dotenv.config();
 const app = express();
 
@@ -8,9 +8,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get('/users', async (req: Request, res: Response): Promise<void> => {
-  try {
-    const users = await read();
-    res.json(users);
+       try {
+           const users = await read();
+           res.json(users);
   } catch (error) {
     res.status(500).json({ message: error });
   }
