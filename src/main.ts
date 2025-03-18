@@ -1,8 +1,8 @@
 import express, { NextFunction, Request, Response } from 'express';
-import dotenv from 'dotenv';
 import { ApiError } from './errors/api-error';
 import { userRouter } from './routers/user.router';
-dotenv.config();
+import { config } from './configs/config';
+import mongoose from 'mongoose';
 const app = express();
 
 app.use(express.json());
@@ -24,8 +24,9 @@ process.on ('uncaughtException', (error) =>{
   process.exit(1);
 });
 
-const port = process.env.PORT;
-app.listen(port, () => {
+
+app.listen(config.port, async () => {
+  await mongoose.connect(config.mongoUri);
   // eslint-disable-next-line no-console
-  console.log(`Example app listening on port ${port}`);
+  console.log(`Example app listening on port ${config.port}`);
 });
