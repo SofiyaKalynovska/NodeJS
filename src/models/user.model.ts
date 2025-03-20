@@ -11,7 +11,8 @@ const userSchema = new Schema(
     phone: { type: String, required: false },
     registrationDate: { type: Date, default: Date.now },
     isDelete: { type: Boolean, default: false },
-    isVerified: { type: Boolean, default: false }
+    isVerified: { type: Boolean, default: false },
+    tasks: [{ type: Schema.Types.ObjectId, ref: 'tasks' }]
   },
   { timestamps: true, versionKey: false }
 );

@@ -7,7 +7,7 @@ const taskSchema = new Schema(
     description: { type: String, required: true },
     status: { type: String, required: true, default: 'pending' },
     required: { type: Boolean, required: true },
-    owner: { type: Schema.Types.ObjectId, ref: 'users', required: true }
+    owner: { type: Schema.Types.ObjectId, ref: 'users' }
   },
   { timestamps: true, versionKey: false }
 );
