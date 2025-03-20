@@ -1,4 +1,4 @@
-import { IUser } from 'interfaces/user.interface';
+import { IUser, IUserDto } from 'interfaces/user.interface';
 import { userRepository } from '../repositories/user.repository';
 
 class UserService {
@@ -10,7 +10,7 @@ class UserService {
     return await userRepository.createUser(dto);
   }
 
-  public async getUserById (userId: number): Promise<IUser> {
+  public async getUserById (userId: string): Promise<IUser> {
     const user = await userRepository.getUserById(userId);
     if (!user) {
       throw new Error('User not found');
@@ -18,11 +18,11 @@ class UserService {
     return user;
   }
 
-  public async patchUser (userId: number, dto: Partial<IUser>): Promise<IUser> {
+  public async patchUser (userId: string, dto: IUserDto): Promise<IUser | null> {
     return await userRepository.patchUser(userId, dto);
   }
 
-  public async deleteUser (userId: number): Promise<void> {
+  public async deleteUser (userId: string): Promise<void> {
     await userRepository.deleteUser(userId);
   }
 }
