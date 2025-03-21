@@ -1,4 +1,5 @@
 import Joi from 'joi';
+import { TaskStatusEnum } from '../enums/taskStatus.enum';
 
 const taskValidationSchema = Joi.object({
   title: Joi.string().min(3).required().messages({
@@ -11,7 +12,7 @@ const taskValidationSchema = Joi.object({
     'string.min': 'Description must be at least 10 characters long',
     'any.required': 'Description is required'
   }),
-  status: Joi.string().valid('pending', 'in-progress', 'completed').optional().messages({
+  status: Joi.string().valid(TaskStatusEnum).optional().messages({
     'string.base': 'Status must be a string',
     'any.only': 'Status must be one of the following: "pending", "in-progress", "completed"'
   }),
