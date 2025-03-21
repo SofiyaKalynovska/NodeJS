@@ -9,11 +9,6 @@ const userSchema = new Schema(
       required: [true, 'Name is required'],
       minlength: [3, 'Name must be at least 3 characters long']
     },
-    age: {
-      type: Number,
-      required: [true, 'Age is required'],
-      min: [0, 'Age cannot be negative']
-    },
     email: {
       type: String,
       required: [true, 'Email is required'],
