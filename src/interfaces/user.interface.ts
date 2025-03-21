@@ -1,3 +1,5 @@
+import { ITask } from './task.interface';
+
 export interface IUser {
     _id: string;
     name: string;
@@ -11,8 +13,9 @@ export interface IUser {
     isVerified: boolean;
     createdAt: Date;
     updatedAt: Date;
+    tasks: ITask[] | null;
 
 }
 
-export type IUserDto = Pick<IUser, 'name' | 'email' | 'password'>;
+export type IUserDto = Pick<IUser, 'name' | 'email' | 'password' | 'tasks'>;
 

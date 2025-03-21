@@ -1,3 +1,4 @@
+import { UpdateQuery } from 'mongoose';
 import { IUser, IUserDto } from '../interfaces/user.interface';
 import { User } from '../models/user.model';
 
@@ -11,10 +12,12 @@ class UserRepository {
   }
 
   public async getUserById (id: string): Promise<IUser | null> {
-    return await User.findById(id);
+    const user = await User.findById(id).populate('tasks');
+    console.log('user', user);
+    return user;
   }
 
-  public async patchUser (userId: string, dto: IUserDto): Promise<IUser | null> {
+  public async patchUser (userId: string, dto: UpdateQuery<IUserDto>): Promise<IUser | null> {
     return await User.findByIdAndUpdate(userId, dto, { new: true });
   }
 

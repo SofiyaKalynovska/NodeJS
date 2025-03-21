@@ -1,5 +1,6 @@
 import { taskRepository } from '../repositories/task.repository';
 import { ITask, ITaskDto } from '../interfaces/task.interface';
+import { userRepository } from '../repositories/user.repository';
 
 class TaskService {
   public async getAllTasks (): Promise<ITask[]> {
@@ -7,7 +8,19 @@ class TaskService {
   }
 
   public async createTask (dto: ITask): Promise<ITask> {
-    return await taskRepository.createTask(dto);
+    const task = await taskRepository.createTask(dto);
+
+    const owner = task.owner
+      ? await userRepository.getUserById(task.owner)
+      : null;
+
+    if (owner) {
+      await userRepository.patchUser(owner._id, {
+        $push: { tasks: task._id }
+      });
+    }
+
+    return task;
   }
 
   public async getTaskById (taskId: string): Promise<ITask> {
@@ -31,6 +44,19 @@ class TaskService {
   }
 
   public async deleteTask (taskId: string): Promise<void> {
+    const task = await taskRepository.getTaskById(taskId);
+    if (!task) {
+      throw new Error('Task not found');
+    }
+    const owner = task.owner
+      ? await userRepository.getUserById(task.owner)
+      : null;
+
+    if (owner) {
+      await userRepository.patchUser(owner._id, {
+        $pull: { tasks: taskId }
+      });
+    }
     await taskRepository.deleteTask(taskId);
   }
 }
