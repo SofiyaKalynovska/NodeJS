@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { userController } from '../controllers/user.controller';
 import { commonMiddleware } from '../middlewares/common.middleware';
+import UserValidator from '../validators/user.validator';
 
 const router = Router();
 // / because in main we are importing userRouter for '/user' endpoint
@@ -12,13 +13,13 @@ router.get(
 );
 router.post(
   '/',
-  commonMiddleware.validateBody(['email', 'password', 'name']),
+  commonMiddleware.validateBody(UserValidator.userCreateValidationSchema),
   userController.createUser
 );
 router.patch(
   '/:userId',
   commonMiddleware.isIdValid('userId'),
-  commonMiddleware.validateBody(['email', 'password', 'name']),
+  commonMiddleware.validateBody(UserValidator.userUpdateValidationSchema),
   userController.patchUser
 );
 router.delete(

@@ -1,4 +1,4 @@
-import { IUser, IUserDto } from '../interfaces/user.interface';
+import { IUser, IUserUpdateDto } from '../interfaces/user.interface';
 import { userRepository } from '../repositories/user.repository';
 
 class UserService {
@@ -18,7 +18,7 @@ class UserService {
     return user;
   }
 
-  public async patchUser (userId: string, dto: IUserDto): Promise<IUser | null> {
+  public async patchUser (userId: string, dto: IUserUpdateDto): Promise<IUser | null> {
     return await userRepository.patchUser(userId, dto);
   }
 
