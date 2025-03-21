@@ -12,18 +12,18 @@ export default [
       parser: typescriptEslintParser,
       parserOptions: {
         ecmaVersion: 2023,
-        sourceType: 'module'
-      }
-    }
+        sourceType: 'module',
+      },
+    },
   },
 
   {
     languageOptions: {
       globals: {
         ...globals.browser,
-        process: 'readonly'
-      }
-    }
+        process: 'readonly',
+      },
+    },
   },
 
   pluginJs.configs.recommended,
@@ -32,9 +32,9 @@ export default [
   {
     settings: {
       react: {
-        version: 'detect'
-      }
-    }
+        version: 'detect',
+      },
+    },
   },
 
   {
@@ -45,7 +45,7 @@ export default [
       'object-curly-spacing': ['error', 'always'],
       quotes: ['error', 'single'],
       semi: ['error', 'always'],
-      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      'no-console': ['warn', { allow: ['warn', 'error', 'log', 'debug'] }],
       'space-before-function-paren': ['error', 'always'],
       'space-in-parens': ['error', 'never'],
       'brace-style': ['error', '1tbs'],
@@ -56,7 +56,8 @@ export default [
       'no-extra-semi': ['error'],
       'no-extra-parens': ['error', 'all'],
       'prefer-const': 'error',
-      eqeqeq: ['error', 'always']
-    }
-  }
+      eqeqeq: ['error', 'always'],
+      'no-unused-vars': ['error', { args: 'none', ignoreRestSiblings: true }],
+    },
+  },
 ];
