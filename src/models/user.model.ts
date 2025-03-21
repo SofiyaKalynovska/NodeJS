@@ -1,18 +1,57 @@
-import { IUser } from 'interfaces/user.interface';
 import { model, Schema } from 'mongoose';
+import { IUser } from '../interfaces/user.interface';
+import { RoleEnum } from '../enums/role.enum';
 
 const userSchema = new Schema(
   {
-    name: { type: String, required: true },
-    age: { type: Number, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String, required: true },
-    role: { type: String, required: true, default: 'user' },
-    phone: { type: String, required: false },
-    registrationDate: { type: Date, default: Date.now },
-    isDelete: { type: Boolean, default: false },
-    isVerified: { type: Boolean, default: false },
-    tasks: [{ type: Schema.Types.ObjectId, ref: 'tasks' }]
+    name: {
+      type: String,
+      required: [true, 'Name is required'],
+      minlength: [3, 'Name must be at least 3 characters long']
+    },
+    age: {
+      type: Number,
+      required: [true, 'Age is required'],
+      min: [0, 'Age cannot be negative']
+    },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      unique: true,
+      match: [/\S+@\S+\.\S+/, 'Please enter a valid email address']
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+      minlength: [8, 'Password must be at least 8 characters long']
+    },
+    role: {
+      type: String,
+      required: [true, 'Role is required'],
+      enum: RoleEnum,
+      default: RoleEnum.USER
+    },
+    phone: {
+      type: String,
+      required: false,
+      match: [/^\d{10}$/, 'Please enter a valid 10-digit phone number']
+    },
+    registrationDate: {
+      type: Date,
+      default: Date.now
+    },
+    isDelete: {
+      type: Boolean,
+      default: false
+    },
+    isVerified: {
+      type: Boolean,
+      default: false
+    },
+    tasks: [{
+      type: Schema.Types.ObjectId,
+      ref: 'Task'
+    }]
   },
   { timestamps: true, versionKey: false }
 );
