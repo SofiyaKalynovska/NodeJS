@@ -4,11 +4,9 @@ export interface IUser {
     _id: string;
     name: string;
     email: string;
-    age: number;
     password: string;
     role: string;
     phone?: string;
-    registrationDate: string;
     isDelete: boolean;
     isVerified: boolean;
     createdAt: Date;
@@ -17,5 +15,7 @@ export interface IUser {
 
 }
 
-export type IUserDto = Pick<IUser, 'name' | 'email' | 'password' | 'tasks'>;
+export type IUserCreateDto = Pick<IUser, 'name' | 'email' | 'password' | 'phone' | 'role'>;
+
+export type IUserUpdateDto = Pick<IUser, 'name' | 'email' | 'password' | 'phone' | 'role' | 'isDelete' | 'isVerified'>;
 
