@@ -1,3 +1,4 @@
+import { ApiError } from '../errors/api-error';
 import { IUser, IUserUpdateDto } from '../interfaces/user.interface';
 import { userRepository } from '../repositories/user.repository';
 
@@ -7,6 +8,7 @@ class UserService {
   }
 
   public async createUser (dto: IUser): Promise<IUser> {
+    await this.isEmailUnique(dto.email);
     return await userRepository.createUser(dto);
   }
 
@@ -18,12 +20,22 @@ class UserService {
     return user;
   }
 
-  public async patchUser (userId: string, dto: IUserUpdateDto): Promise<IUser | null> {
+  public async patchUser (
+    userId: string,
+    dto: IUserUpdateDto
+  ): Promise<IUser | null> {
     return await userRepository.patchUser(userId, dto);
   }
 
   public async deleteUser (userId: string): Promise<void> {
     await userRepository.deleteUser(userId);
+  }
+
+  private async isEmailUnique (email: string): Promise<void> {
+    const user = await userRepository.getUserByEmail(email);
+    if (user) {
+      throw new ApiError('Email already exists', 409);
+    }
   }
 }
 
