@@ -1,22 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { userService } from '../services/user.service';
-import { IUser } from '../interfaces/user.interface';
 
 class UserController {
   public async getAllUsers (req: Request, res: Response, next: NextFunction) {
     try {
       const result = await userService.getAllUsers();
       res.json(result);
-    } catch (error) {
-      next(error);
-    }
-  }
-
-  public async createUser (req: Request, res: Response, next: NextFunction) {
-    try {
-      const dto = req.body as IUser;
-      const result = await userService.createUser(dto);
-      res.status(201).json(result);
     } catch (error) {
       next(error);
     }

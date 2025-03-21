@@ -11,11 +11,6 @@ router.get(
   commonMiddleware.isIdValid('userId'),
   userController.getUserById
 );
-router.post(
-  '/',
-  commonMiddleware.validateBody(UserValidator.userCreateValidationSchema),
-  userController.createUser
-);
 router.patch(
   '/:userId',
   commonMiddleware.isIdValid('userId'),
