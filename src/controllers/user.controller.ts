@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { userService } from '../services/user.service';
+import { ITokenPayload } from '../interfaces/token.interface';
 
 class UserController {
   public async getAllUsers (req: Request, res: Response, next: NextFunction) {
@@ -27,21 +28,36 @@ class UserController {
     }
   }
 
-  public async patchUser (req: Request, res: Response, next: NextFunction) {
+  public async getMe (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<void> {
     try {
-      const { userId } = req.params;
-      const dto = req.body;
-      const result = await userService.patchUser(userId, dto);
+      const tokenPayload = req.res?.locals.tokenPayload as ITokenPayload;
+      const result = await userService.getMe(tokenPayload);
+
       res.status(200).json(result);
     } catch (error) {
       next(error);
     }
   }
 
-  public async deleteUser (req: Request, res: Response, next: NextFunction) {
+  public async patchMe (req: Request, res: Response, next: NextFunction) {
     try {
-      const { userId } = req.params;
-      await userService.deleteUser(userId);
+      const tokenPayload = req.res?.locals.tokenPayload as ITokenPayload;
+      const dto = req.body;
+      const result = await userService.patchMe(tokenPayload, dto);
+      res.status(200).json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async deleteMe (req: Request, res: Response, next: NextFunction) {
+    try {
+      const tokenPayload = req.res?.locals.tokenPayload as ITokenPayload;
+      await userService.deleteMe(tokenPayload);
       res.sendStatus(204);
     } catch (error) {
       next(error);

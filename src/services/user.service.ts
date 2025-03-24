@@ -1,4 +1,5 @@
 import { ApiError } from '../errors/api-error';
+import { ITokenPayload } from '../interfaces/token.interface';
 import { IUser, IUserUpdateDto } from '../interfaces/user.interface';
 import { userRepository } from '../repositories/user.repository';
 
@@ -16,15 +17,23 @@ class UserService {
     return user;
   }
 
-  public async patchUser (
-    userId: string,
-    dto: IUserUpdateDto
-  ): Promise<IUser | null> {
-    return await userRepository.patchUser(userId, dto);
+  public async getMe (tokenPayload: ITokenPayload): Promise<IUser> {
+    const user = await userRepository.getMe(tokenPayload.userId);
+    if (!user) {
+      throw new Error('User not found');
+    }
+    return user;
   }
 
-  public async deleteUser (userId: string): Promise<void> {
-    await userRepository.deleteUser(userId);
+  public async patchMe (
+    tokenPayload: ITokenPayload,
+    dto: IUserUpdateDto
+  ): Promise<IUser | null> {
+    return await userRepository.patchMe(tokenPayload.userId, dto);
+  }
+
+  public async deleteMe (tokenPayload: ITokenPayload): Promise<void> {
+    await userRepository.deleteUserById(tokenPayload.userId);
   }
 
   public async isEmailUnique (email: string): Promise<void> {
