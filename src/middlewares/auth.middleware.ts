@@ -2,6 +2,7 @@ import { ApiError } from '../errors/api-error';
 import { NextFunction, Request, Response } from 'express';
 import { tokenService } from '../services/token.service';
 import { tokenRepository } from '../repositories/token.repository';
+import { TokenTypeEnum } from '../enums/tokenType.enum';
 //For tokens checking (if they are valid)
 class AuthMiddleware {
   public async checkAccessToken (req: Request, res: Response, next: NextFunction) {
@@ -14,12 +15,13 @@ class AuthMiddleware {
       if (!accessToken) {
         throw new ApiError('Invalid access token', 401);
       }
-      const tokenPayload = tokenService.verifyToken(accessToken, 'access');
+      const tokenPayload = tokenService.verifyToken(accessToken, TokenTypeEnum.ACCESS);
       const pair = await tokenRepository.findByParams({ accessToken });
       if (!pair) {
         throw new ApiError('Invalid access token', 401);
       }
-      req.res!.locals.tokenPayload = tokenPayload;
+      res.locals.tokenPayload = tokenPayload;
+
       next();
     } catch (error) {
       next(error);
@@ -35,12 +37,13 @@ class AuthMiddleware {
       if (!refreshToken) {
         throw new ApiError('Invalid refresh token', 401);
       }
-      const tokenPayload = tokenService.verifyToken(refreshToken,'refresh');
+      const tokenPayload = tokenService.verifyToken(refreshToken, TokenTypeEnum.REFRESH);
       const pair = await tokenRepository.findByParams({ refreshToken });
       if (!pair) {
         throw new ApiError('Invalid refresh token', 401);
       }
-      req.res!.locals.tokenPayload = tokenPayload;
+      res.locals.tokenPayload = tokenPayload;
+      res.locals.refreshToken = refreshToken;
       next();
     } catch (error) {
       next(error);
