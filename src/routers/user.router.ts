@@ -10,18 +10,21 @@ router.get('/', userController.getAllUsers);
 router.get(
   '/me',
   authMiddleware.checkAccessToken,
-  userController.getUserById
+  authMiddleware.checkRefreshToken,
+  userController.getMe
 );
 router.patch(
   '/me',
   authMiddleware.checkAccessToken,
+  authMiddleware.checkRefreshToken,
   commonMiddleware.validateBody(UserValidator.userUpdateValidationSchema),
-  userController.patchUser
+  userController.patchMe
 );
 router.delete(
   '/me',
   authMiddleware.checkAccessToken,
-  userController.deleteUser
+  authMiddleware.checkRefreshToken,
+  userController.deleteMe
 );
 router.get(
   '/:userId',

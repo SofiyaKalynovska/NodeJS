@@ -1,6 +1,6 @@
 import { ApiError } from '../errors/api-error';
 import { ITokenPair } from '../interfaces/token.interface';
-import { IUser, IUserCreateDto } from '../interfaces/user.interface';
+import { ILogin, IUser, IUserCreateDto } from '../interfaces/user.interface';
 import { tokenRepository } from '../repositories/token.repository';
 import { userRepository } from '../repositories/user.repository';
 import { passwordService } from './password.service';
@@ -22,7 +22,7 @@ class AuthService {
     return { user: user, tokens: tokens };
   }
 
-  public async signIn (dto: any): Promise<{ user: IUser; tokens: ITokenPair }> {
+  public async signIn (dto: ILogin): Promise<{ user: IUser; tokens: ITokenPair }> {
     const user = await userRepository.getUserByEmail(dto.email);
     if (!user) {
       throw new Error('User not found');
