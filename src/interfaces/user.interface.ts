@@ -1,3 +1,4 @@
+import { RoleEnum } from '../enums/role.enum';
 import { ITask } from './task.interface';
 
 export interface IUser {
@@ -5,7 +6,7 @@ export interface IUser {
     name: string;
     email: string;
     password: string;
-    role: string;
+    role: RoleEnum;
     phone?: string;
     isDelete: boolean;
     isVerified: boolean;

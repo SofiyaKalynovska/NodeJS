@@ -45,7 +45,7 @@ const userSchema = new Schema(
     },
     tasks: [{
       type: Schema.Types.ObjectId,
-      ref: 'Task'
+      ref: 'tasks'
     }]
   },
   { timestamps: true, versionKey: false }
