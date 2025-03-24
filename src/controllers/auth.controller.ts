@@ -1,11 +1,11 @@
 import { NextFunction, Request, Response } from 'express';
 import { authService } from '../services/auth.service';
-import { IUser } from '../interfaces/user.interface';
+import { IUserCreateDto } from '../interfaces/user.interface';
 
 class AuthController {
   public async signUp (req: Request, res: Response, next: NextFunction) {
     try {
-      const dto = req.body as IUser;
+      const dto = req.body as IUserCreateDto;
       const result = await authService.signUp(dto);
       res.status(201).json(result);
     } catch (error) {
