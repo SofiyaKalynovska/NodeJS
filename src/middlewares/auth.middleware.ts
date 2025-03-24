@@ -6,11 +6,11 @@ import { tokenRepository } from '../repositories/token.repository';
 class AuthMiddleware {
   public async checkAccessToken (req: Request, res: Response, next: NextFunction) {
     try {
-      const header = req.headers.authorization;
-      if (!header) {
+      const token = req.headers.authorization;
+      if (!token) {
         throw new ApiError('No access token provided', 401);
       }
-      const accessToken = header.split('Bearer ')[1];
+      const accessToken = token.split('Bearer ')[1];
       if (!accessToken) {
         throw new ApiError('Invalid access token', 401);
       }
@@ -24,6 +24,28 @@ class AuthMiddleware {
     } catch (error) {
       next(error);
     }
+  }
+  public async checkRefreshToken (req: Request, res: Response, next: NextFunction) {
+    try {
+      const token = req.headers.authorization;
+      if (!token) {
+        throw new ApiError('No refresh token provided', 401);
+      }
+      const refreshToken = token.split('Bearer ')[1];
+      if (!refreshToken) {
+        throw new ApiError('Invalid refresh token', 401);
+      }
+      const tokenPayload = tokenService.verifyToken(refreshToken,'refresh');
+      const pair = await tokenRepository.findByParams({ refreshToken });
+      if (!pair) {
+        throw new ApiError('Invalid refresh token', 401);
+      }
+      req.res!.locals.tokenPayload = tokenPayload;
+      next();
+    } catch (error) {
+      next(error);
+    }
+
   }
 }
 
