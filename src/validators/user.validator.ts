@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import { RoleEnum } from '../enums/role.enum';
-import { IUserCreateDto, IUserUpdateDto } from '../interfaces/user.interface';
+import { ILogin, IUserCreateDto, IUserUpdateDto } from '../interfaces/user.interface';
 import { EMAIL_REGEX, PASSWORD_REGEX, PHONE_REGEX } from '../constants/regex.constant';
 
 class UserValidator {
@@ -63,6 +63,10 @@ class UserValidator {
       'boolean.base': 'isVerified must be a boolean'
     })
   });
+  public static userLoginValidationSchema = Joi.object({
+    email: this.emailValidation().required(),
+    password: this.passwordValidation().required()
+  });
 
   public static validateCreateData (data: IUserCreateDto) {
     return this.userCreateValidationSchema.validateAsync(data);
@@ -70,6 +74,10 @@ class UserValidator {
 
   public static validateUpdateData (data: IUserUpdateDto) {
     return this.userUpdateValidationSchema.validateAsync(data);
+  }
+
+  public static validateLoginData (data: ILogin) {
+    return this.userLoginValidationSchema.validateAsync(data);
   }
 }
 
