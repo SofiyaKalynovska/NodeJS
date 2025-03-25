@@ -3,6 +3,7 @@ import { ITokenPair, ITokenPayload } from '../interfaces/token.interface';
 import { ILogin, IUser, IUserCreateDto } from '../interfaces/user.interface';
 import { tokenRepository } from '../repositories/token.repository';
 import { userRepository } from '../repositories/user.repository';
+import { emailService } from './emai.service';
 import { passwordService } from './password.service';
 import { tokenService } from './token.service';
 import { userService } from './user.service';
@@ -19,6 +20,7 @@ class AuthService {
       role: user.role
     });
     await tokenRepository.createToken({ ...tokens, _userId: user._id });
+    await emailService.sendEmail('morderium18@gmail.com');
     return { user: user, tokens: tokens };
   }
 
