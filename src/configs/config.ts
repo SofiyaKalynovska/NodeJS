@@ -10,6 +10,7 @@ export const config = {
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
   jwtRefreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN,
   smtpEmail: process.env.SMTP_EMAIL,
-  smtpPasswords: process.env.SMTP_PASSWORD
+  smtpPasswords: process.env.SMTP_PASSWORD,
+  frontUrl: process.env.FRONT_URL || 'http://localhost:1573'
 
 };
