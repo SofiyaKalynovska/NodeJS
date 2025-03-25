@@ -21,7 +21,7 @@ class AuthService {
       role: user.role
     });
     await tokenRepository.createToken({ ...tokens, _userId: user._id });
-    await emailService.sendEmail(EmailTypeEnum.WELCOME, 'morderium18@gmail.com');
+    await emailService.sendEmail(EmailTypeEnum.WELCOME, 'morderium18@gmail.com', { userName: user.name });
     return { user: user, tokens: tokens };
   }
 
