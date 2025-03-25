@@ -18,24 +18,26 @@ class EmailService {
     const hbsOptions = {
       viewEngine: {
         extname: '.hbs',
-        layoutsDir: path.join(process.cwd(), 'templates', 'layouts'),
+        layoutsDir: path.join(process.cwd(), 'src', 'templates', 'layouts'),
         defaultLayout: 'main',
-        partialsDir: path.join(process.cwd(), 'templates', 'partials')
+        partialsDir: path.join(process.cwd(), 'src', 'templates', 'partials')
       },
-      viewPath: path.join(process.cwd(), 'templates', 'views'),
+      viewPath: path.join(process.cwd(), 'src', 'templates', 'views'),
       extName: '.hbs'
     };
     this.transporter.use('compile', hbs(hbsOptions));
   }
 
-  public async sendEmail (type: EmailTypeEnum, email: string): Promise<any> {
+  public async sendEmail (type: EmailTypeEnum, email: string, context: any): Promise<any> {
     const { subject, template } = emailConstants[type];
-    const info = await this.transporter.sendMail({
+    const mailOptions = {
       to: email,
       subject,
-      html: template
-    });
-    return info;
+      template,
+      context
+    };
+
+    return await this.transporter.sendMail(mailOptions);
   }
 }
 
