@@ -1,3 +1,4 @@
+import { config } from '../configs/config';
 import { EmailTypeEnum } from '../enums/email-type.enum';
 import { ApiError } from '../errors/api-error';
 import { ITokenPair, ITokenPayload } from '../interfaces/token.interface';
@@ -21,7 +22,7 @@ class AuthService {
       role: user.role
     });
     await tokenRepository.createToken({ ...tokens, _userId: user._id });
-    await emailService.sendEmail(EmailTypeEnum.WELCOME, 'morderium18@gmail.com', { userName: user.name });
+    await emailService.sendEmail(EmailTypeEnum.WELCOME, 'morderium18@gmail.com', { name: user.name, frontUrl: config.frontUrl });
     return { user: user, tokens: tokens };
   }
 
