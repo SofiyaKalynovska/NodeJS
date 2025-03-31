@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { userService } from '../services/user.service';
-import { ITokenPayload } from '../interfaces/token.interface';
+import { IResponseWithTokenPayload } from '../interfaces/token.interface';
+import { IRequestWithUser } from '../interfaces/user.interface';
 
 class UserController {
   public async getAllUsers (req: Request, res: Response, next: NextFunction) {
@@ -13,12 +14,12 @@ class UserController {
   }
 
   public async getUserById (
-    req: Request,
+    req: IRequestWithUser,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const { userId } = req.params;
+      const userId = req.user._id.toString();
 
       const result = await userService.getUserById(userId);
 
@@ -29,8 +30,8 @@ class UserController {
   }
 
   public async getMe (
-    req: any,
-    res: Response,
+    req: IRequestWithUser,
+    res: IResponseWithTokenPayload,
     next: NextFunction
   ): Promise<void> {
     try {
@@ -40,9 +41,9 @@ class UserController {
     }
   }
 
-  public async patchMe (req: Request, res: Response, next: NextFunction) {
+  public async patchMe (req: IRequestWithUser, res: IResponseWithTokenPayload, next: NextFunction) {
     try {
-      const tokenPayload = req.res?.locals.tokenPayload as ITokenPayload;
+      const tokenPayload = res.locals.tokenPayload;
       const dto = req.body;
       const result = await userService.patchMe(tokenPayload, dto);
       res.status(200).json(result);
@@ -51,9 +52,9 @@ class UserController {
     }
   }
 
-  public async deleteMe (req: Request, res: Response, next: NextFunction) {
+  public async deleteMe (req: IRequestWithUser, res: IResponseWithTokenPayload, next: NextFunction): Promise<void> {
     try {
-      const tokenPayload = req.res?.locals.tokenPayload as ITokenPayload;
+      const tokenPayload = res.locals.tokenPayload;
       await userService.deleteMe(tokenPayload);
       res.sendStatus(204);
     } catch (error) {

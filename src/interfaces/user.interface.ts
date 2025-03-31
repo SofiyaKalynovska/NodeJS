@@ -1,5 +1,7 @@
 import { RoleEnum } from '../enums/role.enum';
 import { ITask } from './task.interface';
+import { Request } from 'express';
+
 
 export interface IUser {
   _id: string;

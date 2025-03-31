@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiError } from '../errors/api-error';
-import { TaskValidator } from '../validators/task.validator'; // Correct import
+import { TaskValidator } from '../validators/task.validator';
 
 export const validateTaskData = (req: Request, res: Response, next: NextFunction) => {
   const { method } = req;
