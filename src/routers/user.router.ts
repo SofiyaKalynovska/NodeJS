@@ -3,6 +3,7 @@ import { userController } from '../controllers/user.controller';
 import { commonMiddleware } from '../middlewares/common.middleware';
 import UserValidator from '../validators/user.validator';
 import { authMiddleware } from '../middlewares/auth.middleware';
+import { withAuthUserAndToken } from '../utils/request-handler';
 
 const router = Router();
 router.use(authMiddleware.checkAccessToken);
@@ -10,21 +11,21 @@ router.use(authMiddleware.checkAccessToken);
 router.get('/', userController.getAllUsers);
 router.get(
   '/me',
-  userController.getMe
+  withAuthUserAndToken(userController.getMe)
 );
 router.patch(
   '/me',
   commonMiddleware.validateBody(UserValidator.userUpdateValidationSchema),
-  userController.patchMe
+  withAuthUserAndToken(userController.patchMe)
 );
 router.delete(
   '/me',
-  userController.deleteMe
+  withAuthUserAndToken(userController.deleteMe)
 );
 router.get(
   '/:userId',
   commonMiddleware.isIdValid('userId'),
-  userController.getUserById
+  withAuthUserAndToken(userController.getUserById)
 );
 
 export const userRouter = router;

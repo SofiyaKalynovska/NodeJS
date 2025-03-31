@@ -1,4 +1,4 @@
-import nodemailer, { Transporter } from 'nodemailer';
+import nodemailer, { SentMessageInfo, Transporter } from 'nodemailer';
 import { config } from '../configs/config';
 import hbs from 'nodemailer-express-handlebars';
 import path from 'node:path';
@@ -42,7 +42,7 @@ class EmailService {
     type: T,
     email: string,
     context: EmailTypeToPayloadType[T]
-  ): Promise<any> {
+  ): Promise<SentMessageInfo> {
     const { subject, template } = emailConstants[type];
     const mailOptions = {
       to: email,

@@ -1,5 +1,5 @@
 import { RoleEnum } from '../enums/role.enum';
-
+import { Response } from 'express';
 export interface IToken {
   _id: string;
   _userId: string;

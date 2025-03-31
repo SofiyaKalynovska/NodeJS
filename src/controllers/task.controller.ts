@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import { ApiError } from '../errors/api-error';
 import { taskService } from '../services/task.service';
+import { IRequestWithUser } from '../interfaces/user.interface';
 
 class TaskController {
   public async createTask (
-    req: any,
+    req: IRequestWithUser,
     res: Response,
     next: NextFunction
   ): Promise<void> {
