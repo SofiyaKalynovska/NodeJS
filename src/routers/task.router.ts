@@ -2,10 +2,11 @@ import { taskController } from '../controllers/task.controller';
 import { Router } from 'express';
 import { commonMiddleware } from '../middlewares/common.middleware';
 import { TaskValidator } from '../validators/task.validator';
+import { authMiddleware } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.post('/', commonMiddleware.validateBody(TaskValidator.createSchema) , taskController.createTask);
+router.post('/', authMiddleware.checkAccessToken, taskController.createTask);
 router.get('/', taskController.getAllTasks);
 router.get('/:taskId',commonMiddleware.isIdValid('taskId'), taskController.getTaskById);
 router.get('/user/:userId', commonMiddleware.isIdValid('userId'), taskController.getTasksByUserId);

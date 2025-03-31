@@ -5,7 +5,7 @@ import { tokenRepository } from '../repositories/token.repository';
 import { TokenTypeEnum } from '../enums/tokenType.enum';
 //For tokens checking (if they are valid)
 class AuthMiddleware {
-  public async checkAccessToken (req: Request, res: Response, next: NextFunction) {
+  public async checkAccessToken (req: any, res: Response, next: NextFunction) {
     try {
       const token = req.headers.authorization;
       if (!token) {
@@ -21,6 +21,12 @@ class AuthMiddleware {
         throw new ApiError('Invalid access token', 401);
       }
       res.locals.tokenPayload = tokenPayload;
+
+      if (!pair._userId) {
+        throw new ApiError('User with this token not found', 403);
+      }
+
+      req.user = pair?._userId;
 
       next();
     } catch (error) {

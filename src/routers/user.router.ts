@@ -5,27 +5,24 @@ import UserValidator from '../validators/user.validator';
 import { authMiddleware } from '../middlewares/auth.middleware';
 
 const router = Router();
+router.use(authMiddleware.checkAccessToken);
 // / because in main we are importing userRouter for '/user' endpoint
 router.get('/', userController.getAllUsers);
 router.get(
   '/me',
-  authMiddleware.checkAccessToken,
   userController.getMe
 );
 router.patch(
   '/me',
-  authMiddleware.checkAccessToken,
   commonMiddleware.validateBody(UserValidator.userUpdateValidationSchema),
   userController.patchMe
 );
 router.delete(
   '/me',
-  authMiddleware.checkAccessToken,
   userController.deleteMe
 );
 router.get(
   '/:userId',
-  authMiddleware.checkAccessToken,
   commonMiddleware.isIdValid('userId'),
   userController.getUserById
 );

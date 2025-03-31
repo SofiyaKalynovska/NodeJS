@@ -4,13 +4,14 @@ import { taskService } from '../services/task.service';
 
 class TaskController {
   public async createTask (
-    req: Request,
+    req: any,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
       const taskData = req.body;
-      const task = await taskService.createTask(taskData);
+      const user = req.user;
+      const task = await taskService.createTask({ ...taskData, owner: user._id });
       res.status(201).json({ message: 'Task created successfully', task });
     } catch (error) {
       next(error);
@@ -71,7 +72,7 @@ class TaskController {
       const taskData = req.body;
       const updatedTask = await taskService.updateTask(taskId, taskData);
       if (!updatedTask) {
-        throw new ApiError('Task not found', 404);
+        throw new ApiError('Something went wrong during update', 404);
       }
       res
         .status(200)

@@ -5,15 +5,24 @@ import path from 'node:path';
 import { emailConstants } from '../constants/email.constants';
 import { EmailTypeEnum } from '../enums/email-type.enum';
 import { EmailTypeToPayloadType } from '../types/email-type-to-payload.type';
+import { ApiError } from '../errors/api-error';
 class EmailService {
   private transporter: Transporter;
   constructor () {
+    const smtpEmail = config.smtpEmail;
+    const smtpPassword = config.smtpPasswords;
+    if (!smtpEmail || !smtpPassword) {
+      throw new ApiError(
+        'SMTP credentials are missing. Please provide them in the environment variables.',
+        400
+      );
+    }
     this.transporter = nodemailer.createTransport({
       service: 'gmail',
       from: 'Node.js',
       auth: {
-        user: config.smtpEmail,
-        pass: config.smtpPasswords
+        user: smtpEmail,
+        pass: smtpPassword
       }
     });
     const hbsOptions = {
@@ -29,7 +38,11 @@ class EmailService {
     this.transporter.use('compile', hbs(hbsOptions));
   }
 
-  public async sendEmail<T extends EmailTypeEnum> (type: T, email: string, context: EmailTypeToPayloadType[T]): Promise<any> {
+  public async sendEmail<T extends EmailTypeEnum> (
+    type: T,
+    email: string,
+    context: EmailTypeToPayloadType[T]
+  ): Promise<any> {
     const { subject, template } = emailConstants[type];
     const mailOptions = {
       to: email,
