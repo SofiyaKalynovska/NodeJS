@@ -29,15 +29,12 @@ class UserController {
   }
 
   public async getMe (
-    req: Request,
+    req: any,
     res: Response,
     next: NextFunction
   ): Promise<void> {
     try {
-      const tokenPayload = req.res?.locals.tokenPayload as ITokenPayload;
-      const result = await userService.getMe(tokenPayload);
-
-      res.status(200).json(result);
+      res.status(200).json(req.user);
     } catch (error) {
       next(error);
     }

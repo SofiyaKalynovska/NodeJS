@@ -14,16 +14,20 @@ class AuthService {
   public async signUp (
     dto: IUserCreateDto
   ): Promise<{ user: IUser; tokens: ITokenPair }> {
-    await userService.isEmailUnique(dto.email);
-    const password = await passwordService.hashPassword(dto.password);
-    const user = await userRepository.createUser({ ...dto, password });
-    const tokens = tokenService.generateToken({
-      userId: user._id,
-      role: user.role
-    });
-    await tokenRepository.createToken({ ...tokens, _userId: user._id });
-    await emailService.sendEmail(EmailTypeEnum.WELCOME, 'morderium18@gmail.com', { name: user.name, frontUrl: config.frontUrl });
-    return { user: user, tokens: tokens };
+    try {
+      await userService.isEmailUnique(dto.email);
+      const password = await passwordService.hashPassword(dto.password);
+      const user = await userRepository.createUser({ ...dto, password });
+      const tokens = tokenService.generateToken({
+        userId: user._id,
+        role: user.role
+      });
+      await tokenRepository.createToken({ ...tokens, _userId: user._id });
+      await emailService.sendEmail(EmailTypeEnum.WELCOME, 'morderium18@gmail.com', { name: user.name, frontUrl: config.frontUrl });
+      return { user: user, tokens: tokens };
+    } catch {
+      throw new ApiError('Error creating user', 400);
+    }
   }
 
   public async signIn (
@@ -39,7 +43,7 @@ class AuthService {
     );
 
     if (!isPasswordCorrect) {
-      throw new ApiError('Invalid email or password', 401);
+      throw new ApiError('Invalid password', 401);
     }
     const tokens = tokenService.generateToken({
       userId: user._id,

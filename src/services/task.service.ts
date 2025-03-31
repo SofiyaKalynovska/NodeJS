@@ -10,12 +10,10 @@ class TaskService {
   public async createTask (dto: ITask): Promise<ITask> {
     const task = await taskRepository.createTask(dto);
 
-    const owner = task.owner
-      ? await userRepository.getUserById(task.owner)
-      : null;
+    const owner = task.owner;
 
     if (owner) {
-      await userRepository.patchUser(owner._id, {
+      await userRepository.patchUser(owner, {
         $push: { tasks: task._id }
       });
     }
