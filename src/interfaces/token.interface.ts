@@ -17,3 +17,9 @@ export interface ITokenPayload {
 export type ITokenPair = Pick<IToken, 'accessToken' | 'refreshToken'>;
 
 export type ITokenDto = ITokenPair & { _userId: string };
+
+export interface IResponseWithTokenPayload extends Response {
+  locals: {
+    tokenPayload: ITokenPayload;
+  };
+}
