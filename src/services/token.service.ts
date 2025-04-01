@@ -73,28 +73,28 @@ class TokenService {
     try {
       let secret: string | undefined;
       switch (type) {
-      case 'access':
+      case TokenTypeEnum.ACCESS:
         secret = config.jwtAccessSecret;
         break;
-      case 'refresh':
+      case TokenTypeEnum.REFRESH:
         secret = config.jwtRefreshSecret;
         break;
       default:
         throw new ApiError('Invalid token type', 401);
       }
 
-      const decoded = jwt.verify(token, secret as unknown as jwt.Secret);
-      return decoded as ITokenPayload;
-    } catch (error) {
-      if (error instanceof jwt.JsonWebTokenError) {
-        throw new ApiError('Invalid token', 401);
-      } else if (error instanceof jwt.TokenExpiredError) {
-        throw new ApiError('Token expired', 401);
-      } else {
-        throw new ApiError('Token verification failed', 500);
+      const tokenPayload = jwt.verify(token, secret as unknown as jwt.Secret) as ITokenPayload;
+
+      if (!tokenPayload || !tokenPayload.userId) {
+        throw new ApiError('Invalid token payload', 400);
       }
+
+      return tokenPayload;
+    } catch {
+      throw new ApiError('Invalid or expired token', 401);
     }
   }
+
 }
 
 export const tokenService = new TokenService();
