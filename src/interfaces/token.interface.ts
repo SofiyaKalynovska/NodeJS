@@ -21,5 +21,6 @@ export type ITokenDto = ITokenPair & { _userId: string };
 export interface IResponseWithTokenPayload extends Response {
   locals: {
     tokenPayload: ITokenPayload;
+    refreshToken?: string;
   };
 }

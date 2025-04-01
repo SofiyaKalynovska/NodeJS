@@ -19,12 +19,11 @@ class UserController {
     next: NextFunction
   ): Promise<void> {
     try {
-      const userId = req.user._id.toString();
-
+      const { userId } = req.params;
       const result = await userService.getUserById(userId);
-
       res.status(200).json(result);
     } catch (error) {
+      console.error('Error in getUserById:', error);
       next(error);
     }
   }
@@ -35,7 +34,8 @@ class UserController {
     next: NextFunction
   ): Promise<void> {
     try {
-      res.status(200).json(req.user);
+      const user = req.user;
+      res.status(200).json(user);
     } catch (error) {
       next(error);
     }

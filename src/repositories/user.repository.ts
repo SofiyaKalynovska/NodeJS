@@ -20,10 +20,6 @@ class UserRepository {
     return await User.findByIdAndUpdate(userId, dto, { new: true });
   }
 
-  public async getMe (id: string): Promise<IUser | null> {
-    const user = await User.findById(id).populate('tasks');
-    return user;
-  }
   public async patchMe (userId: string, dto: UpdateQuery<IUserUpdateDto>): Promise<IUser | null> {
     return await User.findByIdAndUpdate(userId, dto, { new: true });
   }
