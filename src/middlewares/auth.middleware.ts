@@ -19,10 +19,7 @@ class AuthMiddleware {
       }
       const accessToken = authHeader.split(' ')[1];
 
-      const tokenPayload = tokenService.verifyToken(
-        accessToken,
-        TokenTypeEnum.ACCESS
-      );
+      const tokenPayload = tokenService.checkToken(accessToken, TokenTypeEnum.ACCESS);
       if (!tokenPayload || !tokenPayload.userId) {
         throw new ApiError('Invalid token payload', 401);
       }
@@ -61,10 +58,7 @@ class AuthMiddleware {
         throw new ApiError('No refresh token provided', 400);
       }
 
-      const tokenPayload = tokenService.verifyToken(
-        refreshToken,
-        TokenTypeEnum.REFRESH
-      );
+      const tokenPayload = tokenService.checkToken(refreshToken, TokenTypeEnum.REFRESH);
       if (!tokenPayload) {
         throw new ApiError('Invalid refresh token payload', 401);
       }
