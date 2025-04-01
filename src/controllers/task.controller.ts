@@ -12,7 +12,10 @@ class TaskController {
     try {
       const taskData = req.body;
       const user = req;
-      const task = await taskService.createTask({ ...taskData, owner: user.user._id });
+      const task = await taskService.createTask({
+        ...taskData,
+        owner: user.user._id
+      });
       res.status(201).json({ message: 'Task created successfully', task });
     } catch (error) {
       next(error);
@@ -90,7 +93,12 @@ class TaskController {
   ): Promise<void> {
     try {
       const { taskId } = req.params;
-      await taskService.deleteTask(taskId);
+      const user = (req as IRequestWithUser).user;
+      console.log('user = (req as IRequestWithUser)', user);
+      if (!user) {
+        throw new ApiError('User not found in the request', 401);
+      }
+      await taskService.deleteTask(taskId, user._id);
       res.status(200).json({ message: 'Task deleted successfully' });
     } catch (error) {
       next(error);

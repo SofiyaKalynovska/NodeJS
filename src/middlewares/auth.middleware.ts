@@ -7,7 +7,11 @@ import { userRepository } from '../repositories/user.repository';
 import { IRequestWithUser } from '../interfaces/user.interface';
 
 class AuthMiddleware {
-  public async checkAccessToken (req: Request, res: Response, next: NextFunction) {
+  public async checkAccessToken (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -15,7 +19,10 @@ class AuthMiddleware {
       }
       const accessToken = authHeader.split(' ')[1];
 
-      const tokenPayload = tokenService.verifyToken(accessToken, TokenTypeEnum.ACCESS);
+      const tokenPayload = tokenService.verifyToken(
+        accessToken,
+        TokenTypeEnum.ACCESS
+      );
       if (!tokenPayload || !tokenPayload.userId) {
         throw new ApiError('Invalid token payload', 401);
       }
@@ -39,15 +46,25 @@ class AuthMiddleware {
     }
   }
 
-  public async checkRefreshToken (req: Request, res: Response, next: NextFunction) {
+  public async checkRefreshToken (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ) {
     try {
       const authHeader = req.headers.authorization;
       if (!authHeader || !authHeader.startsWith('Bearer ')) {
         throw new ApiError('Invalid or missing refresh token', 401);
       }
       const refreshToken = authHeader.split(' ')[1];
+      if (!refreshToken) {
+        throw new ApiError('No refresh token provided', 400);
+      }
 
-      const tokenPayload = tokenService.verifyToken(refreshToken, TokenTypeEnum.REFRESH);
+      const tokenPayload = tokenService.verifyToken(
+        refreshToken,
+        TokenTypeEnum.REFRESH
+      );
       if (!tokenPayload) {
         throw new ApiError('Invalid refresh token payload', 401);
       }

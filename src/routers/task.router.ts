@@ -6,8 +6,9 @@ import { authMiddleware } from '../middlewares/auth.middleware';
 import { withAuthUser } from '../utils/request-handler';
 
 const router = Router();
+router.use(authMiddleware.checkAccessToken);
 
-router.post('/', authMiddleware.checkAccessToken, withAuthUser(taskController.createTask));
+router.post('/', withAuthUser(taskController.createTask));
 router.get('/', taskController.getAllTasks);
 router.get('/:taskId',commonMiddleware.isIdValid('taskId'), taskController.getTaskById);
 router.get('/user/:userId', commonMiddleware.isIdValid('userId'), taskController.getTasksByUserId);
