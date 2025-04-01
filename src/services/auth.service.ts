@@ -5,8 +5,8 @@ import { ITokenPair, ITokenPayload } from '../interfaces/token.interface';
 import { ILogin, IUser, IUserCreateDto } from '../interfaces/user.interface';
 import { tokenRepository } from '../repositories/token.repository';
 import { userRepository } from '../repositories/user.repository';
+import { passwordHandler } from '../utils/password-handler';
 import { emailService } from './emai.service';
-import { passwordService } from './password.service';
 import { tokenService } from './token.service';
 import { userService } from './user.service';
 
@@ -16,7 +16,7 @@ class AuthService {
   ): Promise<{ user: IUser; tokens: ITokenPair }> {
     try {
       await userService.isEmailUnique(dto.email);
-      const password = await passwordService.hashPassword(dto.password);
+      const password = await passwordHandler.hashPassword(dto.password);
       const user = await userRepository.createUser({ ...dto, password });
       const tokens = tokenService.generateToken({
         userId: user._id,
@@ -37,7 +37,7 @@ class AuthService {
     if (!user) {
       throw new ApiError('Incorrect email or password', 401);
     }
-    const isPasswordCorrect = await passwordService.comparePasswords(
+    const isPasswordCorrect = await passwordHandler.comparePasswords(
       dto.password,
       user.password
     );

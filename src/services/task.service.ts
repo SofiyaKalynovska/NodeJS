@@ -1,6 +1,8 @@
 import { taskRepository } from '../repositories/task.repository';
 import { ITask, ITaskDto } from '../interfaces/task.interface';
 import { userRepository } from '../repositories/user.repository';
+import { ApiError } from '../errors/api-error';
+// import { IUser } from '../interfaces/user.interface';
 
 class TaskService {
   public async getAllTasks (): Promise<ITask[]> {
@@ -24,7 +26,7 @@ class TaskService {
   public async getTaskById (taskId: string): Promise<ITask> {
     const task = await taskRepository.getTaskById(taskId);
     if (!task) {
-      throw new Error('Task not found');
+      throw new ApiError('Task not found', 404);
     }
     return task;
   }
@@ -34,21 +36,29 @@ class TaskService {
   }
 
   public async updateTask (taskId: string, dto: ITaskDto): Promise<ITask> {
-    const updatedTask = await taskRepository.updateTask(taskId, dto);
-    if (!updatedTask) {
-      throw new Error('Task not found');
+    try {
+      const updatedTask = await taskRepository.updateTask(taskId, dto);
+      if (!updatedTask) {
+        throw new ApiError('Task not found', 404);
+      }
+      return updatedTask;
+    } catch {
+      throw new ApiError('An unexpected error occurred', 500);
     }
-    return updatedTask;
   }
 
-  public async deleteTask (taskId: string): Promise<void> {
+  public async deleteTask (taskId: string, user: any): Promise<void> {
     const task = await taskRepository.getTaskById(taskId);
     if (!task) {
-      throw new Error('Task not found');
+      throw new ApiError('Task not found', 404);
     }
     const owner = task.owner
       ? await userRepository.getUserById(task.owner)
       : null;
+
+    if (!owner || owner._id.toString() !== user._id.toString()) {
+      throw new ApiError('You are not authorized to delete this task', 403);
+    }
 
     if (owner) {
       await userRepository.patchUser(owner._id, {
