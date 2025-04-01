@@ -11,8 +11,8 @@ class TaskController {
   ): Promise<void> {
     try {
       const taskData = req.body;
-      const user = req.user;
-      const task = await taskService.createTask({ ...taskData, owner: user._id });
+      const user = req;
+      const task = await taskService.createTask({ ...taskData, owner: user.user._id });
       res.status(201).json({ message: 'Task created successfully', task });
     } catch (error) {
       next(error);
