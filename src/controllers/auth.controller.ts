@@ -58,6 +58,43 @@ class AuthController {
       next(error);
     }
   }
+
+  public async logout (req: Request, res: Response, next: NextFunction) {
+    try {
+      const tokenPayload = res.locals.tokenPayload as ITokenPayload;
+      const tokenId = res.locals.tokenId as string;
+
+      if (!tokenPayload || !tokenPayload.userId) {
+        throw new ApiError('Invalid token payload', 400);
+      }
+
+      const result = await authService.logout(tokenPayload.userId, tokenId);
+
+
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  public async logoutAll (req: Request, res: Response, next: NextFunction) {
+    try {
+      const tokenPayload = res.locals.tokenPayload as ITokenPayload;
+
+      if (!tokenPayload || !tokenPayload.userId) {
+        throw new ApiError('Invalid token payload', 400);
+      }
+
+      const result = await authService.logoutAll(tokenPayload.userId);
+
+
+      res.json(result);
+    } catch (error) {
+      next(error);
+    }
+  }
 }
+
+
 
 export const authController = new AuthController();

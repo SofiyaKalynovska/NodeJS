@@ -23,7 +23,11 @@ class AuthService {
         role: user.role
       });
       await tokenRepository.createToken({ ...tokens, _userId: user._id });
-      await emailService.sendEmail(EmailTypeEnum.WELCOME, 'morderium18@gmail.com', { name: user.name, frontUrl: config.frontUrl });
+      await emailService.sendEmail(
+        EmailTypeEnum.WELCOME,
+        'morderium18@gmail.com',
+        { name: user.name, frontUrl: config.frontUrl }
+      );
       return { user: user, tokens: tokens };
     } catch {
       throw new ApiError('Error creating user', 400);
@@ -66,6 +70,28 @@ class AuthService {
       _userId: tokenPayload.userId
     });
     return tokens as ITokenPair;
+  }
+  public async logout (userId: string, tokenId: string): Promise<void> {
+    const user = await userRepository.getUserById(userId);
+    if (!user) {
+      throw new ApiError('There is no user with provided id', 404);
+    }
+    await tokenRepository.deleteOneByParams({
+      _id: tokenId
+    });
+    await emailService.sendEmail(EmailTypeEnum.LOGOUT, 'morderium18@gmail.com', {
+      name: user.name,
+      frontUrl: config.frontUrl
+    });
+  }
+  public async logoutAll (userId: string): Promise<void> {
+    await tokenRepository.deleteAllByParams({
+      _userId: userId
+    });
+    await emailService.sendEmail(EmailTypeEnum.LOGOUT, 'morderium18@gmail.com', {
+      name: 'Admin',
+      frontUrl: config.frontUrl
+    });
   }
 }
 

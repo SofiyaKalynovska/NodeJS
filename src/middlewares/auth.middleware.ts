@@ -19,7 +19,10 @@ class AuthMiddleware {
       }
       const accessToken = authHeader.split(' ')[1];
 
-      const tokenPayload = tokenService.checkToken(accessToken, TokenTypeEnum.ACCESS);
+      const tokenPayload = tokenService.checkToken(
+        accessToken,
+        TokenTypeEnum.ACCESS
+      );
       if (!tokenPayload || !tokenPayload.userId) {
         throw new ApiError('Invalid token payload', 401);
       }
@@ -36,6 +39,7 @@ class AuthMiddleware {
 
       (req as unknown as IRequestWithUser).user = user;
       res.locals.tokenPayload = tokenPayload;
+      res.locals.tokenId = pair._id.toString();
 
       next();
     } catch (error) {
@@ -58,7 +62,10 @@ class AuthMiddleware {
         throw new ApiError('No refresh token provided', 400);
       }
 
-      const tokenPayload = tokenService.checkToken(refreshToken, TokenTypeEnum.REFRESH);
+      const tokenPayload = tokenService.checkToken(
+        refreshToken,
+        TokenTypeEnum.REFRESH
+      );
       if (!tokenPayload) {
         throw new ApiError('Invalid refresh token payload', 401);
       }
@@ -68,6 +75,7 @@ class AuthMiddleware {
         throw new ApiError('Token not found or revoked', 401);
       }
 
+      res.locals.tokenId = pair._id;
       res.locals.tokenPayload = tokenPayload;
       res.locals.refreshToken = refreshToken;
       next();

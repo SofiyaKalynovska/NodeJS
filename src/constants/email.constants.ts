@@ -13,4 +13,9 @@ export const emailConstants: Record<EmailTypeEnum, { subject: string; template: 
     subject: 'Forgot Password subject',
     template: 'forgot-password'
   }
+  ,
+  [EmailTypeEnum.LOGOUT]: {
+    subject: 'Logout user',
+    template: 'logout'
+  }
 };

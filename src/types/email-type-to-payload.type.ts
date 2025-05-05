@@ -6,4 +6,5 @@ export type EmailTypeToPayloadType ={
     [EmailTypeEnum.WELCOME]: PickRequired<EmailCombinePayloadType, 'name' | 'frontUrl'>
     [EmailTypeEnum.OLD_VISIT]: PickRequired<EmailCombinePayloadType, 'email' | 'frontUrl'>
     [EmailTypeEnum.FORGOT_PASSWORD]: PickRequired<EmailCombinePayloadType, 'frontUrl' | 'actionToken' | 'name'>
+    [EmailTypeEnum.LOGOUT]: PickRequired<EmailCombinePayloadType, 'frontUrl' | 'name'>
 }
